@@ -1,0 +1,2 @@
+--sysroot=/home/mivik/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot
+-I./include
