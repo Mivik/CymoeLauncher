@@ -6,13 +6,10 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
-import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Point
 import android.graphics.drawable.ColorDrawable
-import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.*
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.AlphaAnimation
@@ -20,7 +17,6 @@ import android.widget.PopupWindow
 import com.mivik.argon.widget.MPill
 import com.mivik.cymoe.*
 import com.mivik.cymoe.CYTUS_MAIN_ACTIVITY_NAME
-import com.mivik.cymoe.T
 import lab.galaxy.yahfa.HookMain
 import kotlin.math.absoluteValue
 
@@ -69,7 +65,6 @@ class FloatingButton(var context: Context) : PopupWindow(), View.OnTouchListener
 			window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 			window.decorView.setPadding(0, 0, 0, 0)
 			window.attributes = window.attributes.apply {
-				val display = context.resources.displayMetrics
 				width = (screenWidth * 0.6).toInt()
 				height = (screenHeight * 0.7).toInt()
 			}
@@ -110,19 +105,17 @@ class FloatingButton(var context: Context) : PopupWindow(), View.OnTouchListener
 			MotionEvent.ACTION_UP -> {
 				if (!dragged) onClick()
 				else {
-					var tartgetX = 0
-					var tartgetY = 0
 					val decorView = contentView.parent as ViewGroup
 					val lp = decorView.layoutParams as WindowManager.LayoutParams
-					tartgetX = lp.x.coerceAtLeast(0).coerceAtMost(screenWidth - width)
-					tartgetY = lp.y.coerceAtLeast(0).coerceAtMost(screenHeight - height)
-					if (tartgetX != lp.x || tartgetY != lp.y) {
+					val targetX = lp.x.coerceAtLeast(0).coerceAtMost(screenWidth - width)
+					val targetY = lp.y.coerceAtLeast(0).coerceAtMost(screenHeight - height)
+					if (targetX != lp.x || targetY != lp.y) {
 						val ofObject = ValueAnimator.ofObject(TypeEvaluator<Point>() { fraction, startValue, endValue ->
 							Point(
 								(startValue.x + (endValue.x - startValue.x) * fraction).toInt(),
 								(startValue.y + (endValue.y - startValue.y) * fraction).toInt()
 							)
-						}, Point(lp.x, lp.y), Point(tartgetX, tartgetY))
+						}, Point(lp.x, lp.y), Point(targetX, targetY))
 						ofObject.addUpdateListener {
 							val value = it.animatedValue as Point
 							update(value.x, value.y, -1, -1)
