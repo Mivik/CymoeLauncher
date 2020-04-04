@@ -1,4 +1,5 @@
 <h1 align="center">CymoeLauncher</h1>
+<h4 align="center">Cytus + moe = Cymoe！</h4>
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
   <a href="./LICENSE.md" target="_blank">
