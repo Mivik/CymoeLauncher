@@ -23,6 +23,7 @@ class PreferencesActivity : CymoeActivity() {
 		@SuppressWarnings("private")
 		fun buildPreferencesView(context: Context): View {
 			return MPreferencesView(context).apply {
+				view.isVerticalScrollBarEnabled = false
 				val space = dp2px(20)
 				addGroup("核心设置")
 				val cymoePref = CymoePreferences.getInstance(context)

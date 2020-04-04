@@ -14,7 +14,7 @@ import com.mivik.argon.listener.CheckListener;
 
 public class MPill extends View implements C, ValueAnimator.AnimatorUpdateListener {
 	public static final int DEFAULT_SIZE = UI.dp2px(64), DEFAULT_ACCENT_COLOR = Color.BLACK;
-	public static final float SCALE = 2 / 5f;
+	public static final float SCALE = 3 / 5f;
 
 	private float _EStart, _EEnd;
 	private ValueAnimator AniE, AniC;

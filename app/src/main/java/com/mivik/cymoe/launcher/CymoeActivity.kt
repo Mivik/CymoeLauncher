@@ -16,18 +16,4 @@ open class CymoeActivity : AppCompatActivity() {
 		return if (resources is CymoeResourcesWrapper) resources.fallback
 		else resources
 	}
-
-	protected fun View.wrapWithCard(): View = CardView(context).apply {
-		addView(this@wrapWithCard)
-	}
-
-	protected fun View.wrapWithPadding(): View {
-		val context = context
-		return LinearLayoutCompat(context).apply {
-			gravity = Gravity.CENTER
-			clipToPadding = false
-			dp2px(20).also { setPadding(it, it, it, it) }
-			addView(this@wrapWithPadding, -1, -2)
-		}
-	}
 }

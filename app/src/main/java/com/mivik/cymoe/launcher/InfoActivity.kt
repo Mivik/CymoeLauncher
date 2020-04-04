@@ -17,6 +17,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.cardview.widget.CardView
 import com.mivik.argon.widget.MCard
+import com.mivik.argon.widget.OvalOutlineProvider
 import com.mivik.cymoe.*
 
 class InfoActivity : CymoeActivity() {
@@ -47,14 +48,7 @@ class InfoActivity : CymoeActivity() {
 					addView(AppCompatImageView(context).apply {
 						gravity = Gravity.CENTER
 						setImageResource(R.mipmap.my_avatar)
-						outlineProvider = object : ViewOutlineProvider() {
-							override fun getOutline(view: View?, outline: Outline?) {
-								view ?: return
-								outline ?: return
-								outline.setOval(0, 0, view.width, view.height)
-							}
-						}
-						clipToOutline = true
+						circularize()
 						layoutParams = dp2px(128).let { FrameLayout.LayoutParams(it, it) }
 					})
 					var marginParam = LinearLayoutCompat.LayoutParams(-1, -2).apply { topMargin = dp2px(5) }

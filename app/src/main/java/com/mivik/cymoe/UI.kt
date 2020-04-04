@@ -9,9 +9,15 @@ import android.graphics.drawable.Drawable
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.Gravity
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.cardview.widget.CardView
 import androidx.core.graphics.drawable.DrawableCompat
+import com.mivik.argon.widget.MCard
+import com.mivik.argon.widget.OvalOutlineProvider
 
 fun mixColor(colorA: Int, colorB: Int): Int {
 	var a: Int = Color.alpha(colorA)
@@ -75,6 +81,11 @@ fun Context.clip(cs: CharSequence) {
 	manager.setPrimaryClip(ClipData.newPlainText(null, cs))
 }
 
+fun View.circularize() {
+	outlineProvider = OvalOutlineProvider.getInstance()
+	clipToOutline = true
+}
+
 val mainHandler by lazy {
 	Handler(Looper.getMainLooper())
 }
@@ -82,4 +93,20 @@ val mainHandler by lazy {
 inline fun ui(crossinline func: () -> Unit) {
 	if (Looper.getMainLooper() == Looper.myLooper()) func()
 	else mainHandler.post { func() }
+}
+
+fun View.wrapWithCard(): MCard = MCard(context).apply {
+	color = Color.WHITE
+	setPadding(0, 0, 0, 0)
+	addView(this@wrapWithCard, -1, -2)
+}
+
+fun View.wrapWithPadding(): View {
+	val context = context
+	return LinearLayoutCompat(context).apply {
+		gravity = Gravity.CENTER
+		clipToPadding = false
+		dp2px(20).also { setPadding(it, it, it, it) }
+		addView(this@wrapWithPadding, -1, -2)
+	}
 }

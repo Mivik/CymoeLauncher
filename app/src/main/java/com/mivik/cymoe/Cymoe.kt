@@ -16,6 +16,7 @@ import android.util.Log
 import com.mivik.argon.C
 import com.mivik.cymoe.launcher.CymoeInstrumentation
 import com.mivik.cymoe.launcher.CymoeResourcesWrapper
+import com.mivik.cymoe.launcher.FloatingButtonHook
 import com.mivik.cymoe.launcher.R
 import dalvik.system.PathClassLoader
 import java.io.IOException
@@ -27,6 +28,8 @@ import kotlin.properties.Delegates
 internal const val T = "Cymoe"
 
 internal const val CYTUS_PACKAGE_NAME = "com.ilongyuan.cytus2.ly.TapTap"
+
+internal const val CYTUS_MAIN_ACTIVITY_NAME = "com.ilongyuan.cytus2.remaster.MainActivity"
 
 internal const val ASSEMBLY_EXPECTED_MD5 = "178c4c083664e755406707b80231bd93"
 
@@ -186,10 +189,11 @@ object Cymoe {
 			loadedApk,
 			fakeClassLoader
 		)
+		FloatingButtonHook.hook()
 	}
 
 	fun launchCytus(context: Context) {
 		// 没错，就是这么简单
-		context.startActivity(Intent(context, fakeClassLoader.loadClass("com.ilongyuan.cytus2.remaster.MainActivity")))
+		context.startActivity(Intent(context, fakeClassLoader.loadClass(CYTUS_MAIN_ACTIVITY_NAME)))
 	}
 }

@@ -53,8 +53,6 @@ class MPreferencesView(private val context: Context) {
 		}
 	}
 
-	private val divider: DivideDrawable =
-		DivideDrawable(primaryColor)
 	val view: ScrollView = object : ScrollView(context) {
 		init {
 			isFillViewport = true
