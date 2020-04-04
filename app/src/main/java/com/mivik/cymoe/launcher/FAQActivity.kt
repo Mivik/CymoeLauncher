@@ -34,7 +34,7 @@ class FAQActivity : CymoeActivity() {
 					untouchable = true
 					addFAQ("会被封号吗？", "目前为止并没有案例。")
 					addFAQ("为什么每次都要重新输入密码？", "因为你没有给 Cymoe 开存储权限，请前去系统设置界面开启。")
-					addFAQ("为什么明明设置了跳过开场动画缺仍有一部分开场动画？", "开场动画中包含了游戏加载的时间。只有游戏加载完成后才能跳过动画。")
+					addFAQ("为什么明明设置了跳过开场动画却仍有一部分开场动画？", "开场动画中包含了游戏加载的时间。只有游戏加载完成后才能跳过动画。")
 					root.removeViewAt(root.childCount - 1) // remove trailing space
 				}.view.apply {
 					isFocusable = false
