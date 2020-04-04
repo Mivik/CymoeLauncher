@@ -3,7 +3,6 @@ package com.mivik.cymoe.launcher
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
-import android.content.res.Resources
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
@@ -176,8 +175,10 @@ class MPreferencesView(private val context: Context) {
 
 		val titleTextView = AppCompatTextView(context)
 		val subtitleTextView = AppCompatTextView(context)
-		val descriptionLayout = LinearLayoutCompat(context)
+		private val descriptionLayout = LinearLayoutCompat(context)
 		var listener: ((View) -> Unit)? = null
+
+		@SuppressWarnings("private")
 		var showDialogWhenLongClick = true
 
 		init {
@@ -228,6 +229,11 @@ class MPreferencesView(private val context: Context) {
 
 		override fun onClick(v: View) {
 			listener?.invoke(v)
+		}
+
+		override fun setEnabled(enabled: Boolean) {
+			titleTextView.isEnabled = enabled
+			subtitleTextView.isEnabled = enabled
 		}
 	}
 

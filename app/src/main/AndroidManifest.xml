@@ -91,7 +91,6 @@
 				  android:theme="@style/AppTheme"
 				  android:label="@string/app_name"/>
 
-
 		<!--以下均为龙渊的 Manifest 部分-->
 		<!--Things below are from LY's Manifest-->
 		<activity android:name="com.ilongyuan.cytus2.remaster.MainActivity"

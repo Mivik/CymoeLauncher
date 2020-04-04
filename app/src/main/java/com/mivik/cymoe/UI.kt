@@ -14,7 +14,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.cardview.widget.CardView
 import androidx.core.graphics.drawable.DrawableCompat
 import com.mivik.argon.widget.MCard
 import com.mivik.argon.widget.OvalOutlineProvider
@@ -74,6 +73,10 @@ fun Context.toast(cs: CharSequence) = ui {
 
 inline fun Context.alert(crossinline func: AlertDialog.Builder.() -> Unit) = ui {
 	AlertDialog.Builder(this).apply(func).show()
+}
+
+inline fun Context.alertNative(crossinline func: android.app.AlertDialog.Builder.() -> Unit) = ui {
+	android.app.AlertDialog.Builder(this).apply(func).show()
 }
 
 fun Context.clip(cs: CharSequence) {

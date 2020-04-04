@@ -16,7 +16,6 @@ import android.view.animation.AlphaAnimation
 import android.widget.PopupWindow
 import com.mivik.argon.widget.MPill
 import com.mivik.cymoe.*
-import com.mivik.cymoe.CYTUS_MAIN_ACTIVITY_NAME
 import lab.galaxy.yahfa.HookMain
 import kotlin.math.absoluteValue
 
@@ -31,7 +30,11 @@ class FloatingButton(var context: Context) : PopupWindow(), View.OnTouchListener
 		lateinit var card: View
 
 		fun init(context: Context) {
-			card = PreferencesActivity.buildPreferencesView(context).wrapWithCard()
+			card = PreferencesActivity.buildPreferencesView(context).apply {
+				// 那个 IMEI 不能用... 默认是弹出一个 androidx 的 Dialog，但是由于游戏的 Activity 不是 AppCompat 的所以会报错
+				// 如果是用一个新的 Activity 来弹出这个 Dialog 会因为 Resources 的问题报错... 佛了，只好直接禁用。
+				root.removeViewAt(2)
+			}.view.wrapWithCard()
 		}
 	}
 
@@ -71,11 +74,11 @@ class FloatingButton(var context: Context) : PopupWindow(), View.OnTouchListener
 		}.show()
 	}
 
-	var touchFromX = 0f
-	var touchFromY = 0f
-	var fromX = 0
-	var fromY = 0
-	var dragged = false
+	private var touchFromX = 0f
+	private var touchFromY = 0f
+	private var fromX = 0
+	private var fromY = 0
+	private var dragged = false
 
 	@SuppressLint("ClickableViewAccessibility")
 	override fun onTouch(v: View?, event: MotionEvent?): Boolean {

@@ -1,7 +1,7 @@
 package com.mivik.argon;
 
-import com.mivik.argon.widget.UI;
 import android.graphics.Color;
+import com.mivik.argon.widget.UI;
 
 public interface C {
 	String T = "Argon";

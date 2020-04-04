@@ -1,10 +1,10 @@
 package com.mivik.argon;
 
 import android.content.res.AssetManager;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Typeface;
 import android.graphics.Xfermode;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.PorterDuff;
 
 public class Global {
 	public static Xfermode X = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);

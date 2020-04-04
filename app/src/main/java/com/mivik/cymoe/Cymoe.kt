@@ -2,16 +2,14 @@ package com.mivik.cymoe
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Instrumentation
-import android.content.*
+import android.content.Context
+import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.res.AssetManager
 import android.content.res.Resources
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import com.mivik.argon.C
 import com.mivik.cymoe.launcher.CymoeInstrumentation
@@ -108,7 +106,7 @@ object Cymoe {
 	lateinit var fakeAssetManager: AssetManager
 	lateinit var fakeResources: Resources
 	lateinit var fakeClassLoader: ClassLoader
-	lateinit var mInstrumentation: Instrumentation
+	lateinit var mInstrumentation: CymoeInstrumentation
 	lateinit var apkPath: String
 	lateinit var selfPackageName: String
 

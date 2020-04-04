@@ -1,7 +1,6 @@
 package com.mivik.cymoe.launcher
 
 import android.Manifest
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -15,7 +14,6 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import com.mivik.argon.widget.MButton
 import com.mivik.cymoe.*
-import com.mivik.cymoe.launcher.FloatingButtonHook.onAttachedToWindow_new
 import com.yanzhenjie.permission.AndPermission
 import java.io.File
 import java.io.IOException

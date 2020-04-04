@@ -7,17 +7,28 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.os.Bundle
 import android.os.PersistableBundle
+import com.mivik.cymoe.Cymoe
 import com.mivik.cymoe.isCymoeClass
+import java.util.*
 
 object CymoeInstrumentation : Instrumentation() {
+	val activityStack = Stack<Activity>()
+
 	override fun callActivityOnCreate(activity: Activity?, icicle: Bundle?) {
 		if (activity != null) injectActivityIfNeeded(activity)
 		super.callActivityOnCreate(activity, icicle)
+		activityStack.push(activity)
 	}
 
 	override fun callActivityOnCreate(activity: Activity?, icicle: Bundle?, persistentState: PersistableBundle?) {
 		if (activity != null) injectActivityIfNeeded(activity)
 		super.callActivityOnCreate(activity, icicle, persistentState)
+		activityStack.push(activity)
+	}
+
+	override fun callActivityOnDestroy(activity: Activity?) {
+		super.callActivityOnDestroy(activity)
+		activityStack.remove(activity)
 	}
 
 	/**
@@ -33,3 +44,6 @@ object CymoeInstrumentation : Instrumentation() {
 		fieldMBase.set(activity, CymoeContextWrapper(mBase))
 	}
 }
+
+val foregroundActivity: Activity
+	get() = Cymoe.mInstrumentation.activityStack.peek()

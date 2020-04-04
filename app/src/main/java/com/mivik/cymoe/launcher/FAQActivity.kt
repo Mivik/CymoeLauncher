@@ -1,16 +1,12 @@
 package com.mivik.cymoe.launcher
 
 import android.graphics.Color
-import android.net.nsd.NsdManager
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.cardview.widget.CardView
 import com.mivik.argon.widget.MCard
-import com.mivik.cymoe.CymoePreferences
 import com.mivik.cymoe.dp2px
 
 class FAQActivity : CymoeActivity() {

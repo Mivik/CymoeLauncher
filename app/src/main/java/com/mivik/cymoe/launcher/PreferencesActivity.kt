@@ -2,14 +2,8 @@ package com.mivik.cymoe.launcher
 
 import android.content.Context
 import android.os.Bundle
-import android.view.Gravity
-import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.cardview.widget.CardView
 import com.mivik.cymoe.*
-
 
 class PreferencesActivity : CymoeActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,11 +11,11 @@ class PreferencesActivity : CymoeActivity() {
 		setContentView(buildView())
 	}
 
-	private fun buildView() = buildPreferencesView(this).wrapWithCard().wrapWithPadding()
+	private fun buildView() = buildPreferencesView(this).view.wrapWithCard().wrapWithPadding()
 
 	companion object {
 		@SuppressWarnings("private")
-		fun buildPreferencesView(context: Context): View {
+		fun buildPreferencesView(context: Context): MPreferencesView {
 			return MPreferencesView(context).apply {
 				view.isVerticalScrollBarEnabled = false
 				val space = dp2px(20)
@@ -76,7 +70,7 @@ class PreferencesActivity : CymoeActivity() {
 					checked = cymoePref.disableTrueEnding
 					listener = { cymoePref.disableTrueEnding = checked }
 				}
-			}.view
+			}
 		}
 	}
 }
