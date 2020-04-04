@@ -8,17 +8,23 @@
 
 > 龙渊代理的 Cytus II 启动器
 
+## ▶️ 使用
+
+你可以从 [release界面](https://github.com/Mivik/CymoeLauncher/releases) 下载 **CymoeLauncher** 的最新版本。
+
+同时，你也可以选择从源码自行构造 **CymoeLauncher**。
+
 ## 🔨 构建
 
 ~~众所周知，~~ Assembly-CSharp.dll 是一个 Unity 程序的主要代码部分。
 
-为了构建 CymoeLauncher，你需要手动更改游戏中提取出的 Assembly-CSharp.dll 并将它放置在 `assets` 文件夹中。
+为了构建 **CymoeLauncher**，你需要手动更改游戏中提取出的 Assembly-CSharp.dll 并将它放置在 `assets` 文件夹中。
 
 更改建议使用 [dnSpy](https://github.com/0xd4d/dnSpy) 。你需要做的是人工地把 `app/src/main/csharp` 文件夹中所有指定的方法一一替换，很抱歉没有做出自动编译的脚本。
 
 注意 csharp 文件夹中的 Cymoe.cs 是游戏中并不存在的类，需要手工添加。
 
-构建好 Assembly-CSharp.dll 后，你就可以像构建正常 Android 应用一样构建 CymoeLauncher　了。
+构建好 Assembly-CSharp.dll 后，你就可以像构建正常 Android 应用一样构建 **CymoeLauncher**　了。
 
 ## 🖼️ 预览
 
