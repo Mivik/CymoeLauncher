@@ -12,7 +12,7 @@
 
 ## 🔨 构建
 
-~~众所周知，~~Assembly-CSharp.dll 是一个 Unity 程序的主要代码部分。
+~~众所周知，~~ Assembly-CSharp.dll 是一个 Unity 程序的主要代码部分。
 
 如果你需要手动构建 CymoeLauncher，则需要手动更改游戏中提取出的 Assembly-CSharp.dll 并将它放置在 `assets` 文件夹中。
 
