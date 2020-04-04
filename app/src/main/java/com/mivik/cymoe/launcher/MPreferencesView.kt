@@ -25,6 +25,9 @@ import com.mivik.cymoe.empty
 import com.mivik.cymoe.lightColor
 import com.mivik.cymoe.primaryColor
 
+/**
+ * 用于构建 Material 风格的 PreferencesView
+ */
 class MPreferencesView(private val context: Context) {
 	var showDividers: Int
 		get() = root.showDividers

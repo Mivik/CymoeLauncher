@@ -2,7 +2,6 @@ package com.mivik.cymoe.launcher
 
 import android.app.Application
 import android.content.Context
-import android.util.Log
 import com.mivik.cymoe.Cymoe
 
 class CymoeApplication : Application() {

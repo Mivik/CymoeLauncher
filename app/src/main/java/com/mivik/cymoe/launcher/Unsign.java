@@ -10,6 +10,10 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
+/**
+ * 一个简单的工具类，用于运行时替换当前应用的签名。
+ * 对读取 apk 验证签名的方式无效。
+ */
 public final class Unsign implements InvocationHandler {
 	public static final Signature SIGNATURE;
 	private final Object O;

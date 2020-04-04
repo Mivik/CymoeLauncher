@@ -1,7 +1,6 @@
 package com.mivik.cymoe
 
 import android.Manifest
-import android.R
 import android.annotation.SuppressLint
 import android.app.Instrumentation
 import android.content.*
@@ -10,26 +9,20 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.res.AssetManager
 import android.content.res.Resources
-import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.core.graphics.drawable.DrawableCompat
 import com.mivik.argon.C
 import com.mivik.cymoe.launcher.CymoeInstrumentation
 import com.mivik.cymoe.launcher.CymoeResourcesWrapper
-import com.mivik.cymoe.launcher.Unsign
+import com.mivik.cymoe.launcher.R
 import dalvik.system.PathClassLoader
 import java.io.IOException
 import java.lang.ref.WeakReference
 import java.lang.reflect.Method
 import java.security.MessageDigest
 import kotlin.properties.Delegates
-
 
 internal const val T = "Cymoe"
 
@@ -38,10 +31,6 @@ internal const val CYTUS_PACKAGE_NAME = "com.ilongyuan.cytus2.ly.TapTap"
 internal const val ASSEMBLY_EXPECTED_MD5 = "178c4c083664e755406707b80231bd93"
 
 fun CharSequence?.empty() = if (this == null) true else length == 0
-
-val mainHandler by lazy {
-	Handler(Looper.getMainLooper())
-}
 
 fun Class<*>.isCymoeClass(): Boolean = name.startsWith("com.mivik.cymoe.")
 
@@ -58,38 +47,6 @@ fun ByteArray.toHexString(): String {
 	return ret.toString()
 }
 
-inline fun ui(crossinline func: () -> Unit) {
-	if (Looper.getMainLooper() == Looper.myLooper()) func()
-	else mainHandler.post { func() }
-}
-
-fun Context.toast(cs: CharSequence) = ui {
-	Toast.makeText(this, cs, Toast.LENGTH_SHORT).show()
-}
-
-inline fun Context.alert(crossinline func: AlertDialog.Builder.() -> Unit) = ui {
-	AlertDialog.Builder(this).apply(func).show()
-}
-
-fun Context.clip(cs: CharSequence) {
-	val manager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-	manager.setPrimaryClip(ClipData.newPlainText(null, cs))
-}
-
-fun Intent?.adjust(): Intent? {
-	this ?: return null
-	val comp = component
-	if (comp != null) component = ComponentName(Cymoe.selfPackageName, comp.className)
-	return this
-}
-
-fun dp2px(dp: Int) = (Resources.getSystem().displayMetrics.density * dp).toInt()
-
-fun dp2px(dp: Float) = (Resources.getSystem().displayMetrics.density * dp).toInt()
-
-fun Drawable?.tint(color: Int): Drawable? =
-	if (this == null) null else DrawableCompat.wrap(this).mutate().apply { setTint(color) }
-
 val requiredPermissions = arrayOf(
 	Manifest.permission.READ_PHONE_STATE,
 	Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -105,48 +62,6 @@ internal fun internalInit(context: Context) {
 	CymoePreferences.getInstance(context)
 }
 
-fun Context.displayError(t: Throwable, title: String = "错误") {
-	alert {
-		val str = Log.getStackTraceString(t)
-		setTitle(title)
-		setMessage(str)
-		setPositiveButton("确定", null)
-		setNegativeButton("复制") { _, _ -> clip(str) }
-		setCancelable(true)
-	}
-}
-
-fun mixColor(colorA: Int, colorB: Int): Int {
-	var a: Int = Color.alpha(colorA)
-	var r: Int = Color.red(colorA)
-	var g: Int = Color.green(colorA)
-	var b: Int = Color.blue(colorA)
-	a += Color.alpha(colorB)
-	r += Color.red(colorB)
-	g += Color.green(colorB)
-	b += Color.blue(colorB)
-	return Color.argb(
-		if (a > 255) 255 else a,
-		if (r > 255) 255 else r,
-		if (g > 255) 255 else g,
-		if (b > 255) 255 else b
-	)
-}
-
-fun lightColor(color: Int, light: Int): Int = mixColor(color, Color.rgb(light, light, light))
-
-fun darkColor(color: Int, dark: Int): Int {
-	var a: Int = Color.alpha(color)
-	var r: Int = Color.red(color)
-	var g: Int = Color.green(color)
-	var b: Int = Color.blue(color)
-	a -= dark
-	r -= dark
-	g -= dark
-	b -= dark
-	return Color.argb(if (a < 0) 0 else a, if (r < 0) 0 else r, if (g < 0) 0 else g, if (b < 0) 0 else b)
-}
-
 sealed class CymoeException : RuntimeException() {
 	object CytusNotInstalled : CymoeException()
 	class CytusAssemblyMismatch(val foundMD5: String) : CymoeException()
@@ -157,6 +72,7 @@ object Cymoe {
 	@JvmStatic
 	external fun nativeInitialize(assetManager: AssetManager, apkPath: String)
 
+	// 解除 Android P 及以上的反射 API 限制
 	fun unsealHiddenApi() {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return
 		try {
@@ -201,34 +117,30 @@ object Cymoe {
 			if (initialized) return
 			initialized = true
 		}
+		// 下面的工作都只需要做一遍
 		try {
+			// 1. 加载本地库
 			System.loadLibrary("cymoe")
+
+			// 2. 获取 Cytus II 的各种信息
 			selfPackageName = context.packageName
 			try {
 				nativeInitialize(
 					context.assets,
-					context.packageManager.getApplicationInfo(
-						CYTUS_PACKAGE_NAME,
-						0
-					).sourceDir
+					context.packageManager.getApplicationInfo(CYTUS_PACKAGE_NAME, 0).sourceDir
 				)
 				val packageManager = context.packageManager
-				fakeApplicationInfo = packageManager.getApplicationInfo(
-					CYTUS_PACKAGE_NAME, 0
-				)
-				fakePackageInfo = packageManager.getPackageInfo(
-					CYTUS_PACKAGE_NAME, PackageManager.GET_SIGNATURES
-				)
+				fakeApplicationInfo = packageManager.getApplicationInfo(CYTUS_PACKAGE_NAME, 0)
+				fakePackageInfo = packageManager.getPackageInfo(CYTUS_PACKAGE_NAME, PackageManager.GET_SIGNATURES)
 			} catch (e: PackageManager.NameNotFoundException) {
 				throw CymoeException.CytusNotInstalled
 			}
 			apkPath = fakeApplicationInfo.sourceDir
+
+			// 3. 从 Cytus II 的安装包创建 AssetManager 和 Resources，同时验证 Assembly-CSharp.dll
 			fakeAssetManager = AssetManager::class.java.newInstance()
 			AssetManager::class.java.getDeclaredMethod("addAssetPath", String::class.java)
-				.invoke(
-					fakeAssetManager,
-					apkPath
-				)
+				.invoke(fakeAssetManager, apkPath)
 			try {
 				val foundMD5 =
 					fakeAssetManager.open("bin/Data/Managed/Assembly-CSharp.dll").use { it.readBytes().calcMD5() }
@@ -244,10 +156,11 @@ object Cymoe {
 					context.resources,
 					fakeAssetManager
 				)
+
+			// 4. 创建自己的 ClassLoader 和 Instrumentation，并注入到运行时
 			fakeClassLoader = PathClassLoader(apkPath, fakeApplicationInfo.nativeLibraryDir, context.classLoader)
-			mInstrumentation =
-				CymoeInstrumentation
-			setupEnvironment(context)
+			mInstrumentation = CymoeInstrumentation
+			inject(context)
 		} catch (e: CymoeException) {
 			synchronized(this) {
 				initialized = false
@@ -257,7 +170,7 @@ object Cymoe {
 	}
 
 	@SuppressLint("DiscouragedPrivateApi", "PrivateApi")
-	private fun setupEnvironment(context: Context) {
+	private fun inject(context: Context) {
 		val classActivityThread = Class.forName("android.app.ActivityThread")
 		val classLoadedApk = Class.forName("android.app.LoadedApk")
 		val currentActivityThread = classActivityThread.getDeclaredMethod("currentActivityThread").invoke(null)
@@ -276,6 +189,7 @@ object Cymoe {
 	}
 
 	fun launchCytus(context: Context) {
+		// 没错，就是这么简单
 		context.startActivity(Intent(context, fakeClassLoader.loadClass("com.ilongyuan.cytus2.remaster.MainActivity")))
 	}
 }

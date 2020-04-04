@@ -16,7 +16,6 @@ import androidx.core.content.ContextCompat
 import com.mivik.argon.widget.MButton
 import com.mivik.cymoe.*
 import com.yanzhenjie.permission.AndPermission
-import lab.galaxy.yahfa.HookMain
 import java.io.File
 import java.io.IOException
 import kotlin.concurrent.thread
@@ -84,6 +83,9 @@ class MainActivity : CymoeActivity() {
 		)
 	}
 
+	/**
+	 * 将 "IMEI" 与龙渊同步
+	 */
 	private fun syncIMEIIfNeeded() {
 		val pref = FiledUserPreferences.getInstance(this)
 		if (pref.key_imei_local_sdk.empty() || pref.key_imei_local != pref.key_imei_local_sdk) {
@@ -106,6 +108,8 @@ class MainActivity : CymoeActivity() {
 		alert {
 			setTitle("抱歉")
 			setMessage("我们需要一些权限来运行 Cymoe，其中大部分都是来自 Cytus II 的权限。没有它们 Cymoe 将无法正常工作。".run {
+				// 如果 Android 版本在 Q 或以上，IMEI 不能被获取到，龙渊就会随机生成一个 "IMEI" 并存储在 SharedPreferences 中。
+				// 如果我们不手动在 SharedPreferences 中指定和本地安装的 Cytus II 相同的 "IMEI"，龙渊就会把 Cymoe 当作一个新设备。过多的绑定设备会造成登录受限。
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && ContextCompat.checkSelfPermission(
 						this@MainActivity,
 						Manifest.permission.READ_EXTERNAL_STORAGE
@@ -152,7 +156,6 @@ class MainActivity : CymoeActivity() {
 		thread {
 			try {
 				Cymoe.init(this)
-//				TestHook.hook()
 				ui {
 					try {
 						Cymoe.launchCytus(this)
@@ -186,17 +189,4 @@ class MainActivity : CymoeActivity() {
 				displayError(e.err, "未知错误")
 		}
 	}
-}
-
-object TestHook {
-	fun hook() {
-		val self = javaClass
-		HookMain.hook(
-			Cymoe.fakeClassLoader.loadClass("com.longyuan.sdk.IlongSDK").getDeclaredMethod("getDebugMode"),
-			self.getDeclaredMethod("getDebugMode", Any::class.java)
-		)
-	}
-
-	@JvmStatic
-	fun Any.getDebugMode(): Boolean = true
 }

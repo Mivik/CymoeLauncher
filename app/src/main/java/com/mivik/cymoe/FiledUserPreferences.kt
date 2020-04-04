@@ -2,6 +2,9 @@ package com.mivik.cymoe
 
 import android.content.Context
 
+/**
+ * 和龙渊对接的 SharedPreferences
+ */
 class FiledUserPreferences private constructor(context: Context) : KtPreferences(context, "filed_user") {
 	companion object {
 		private var instance: FiledUserPreferences? = null

@@ -84,6 +84,7 @@ DEFINE_HOOK(void*, __loader_dlopen, (const char* filename, int flags, const void
 	return image;
 }
 
+// 当 360加固 获取 getApplicationInfo/getPackageInfo 的 methodID 时，我们对其进行替换。但由于参数不一样，我们在下面 Call 的时候还要判断一下
 DEFINE_HOOK(jmethodID, GetMethodID, (JNIEnv* env, jclass clz, const char* name, const char* signature)) {
 	if (!strcmp(signature, "(Ljava/lang/String;I)Landroid/content/pm/ApplicationInfo;")) return Cymoe::methodGetFakeApplicationInfo;
 	if (!strcmp(signature, "(Ljava/lang/String;I)Landroid/content/pm/PackageInfo;")) return Cymoe::methodGetFakePackageInfo;
@@ -94,6 +95,9 @@ DEFINE_HOOK(jmethodID, GetMethodID, (JNIEnv* env, jclass clz, const char* name, 
 DEFINE_HOOK(jobject, CallObjectMethodV, (JNIEnv* env, jobject obj, jmethodID methodID, va_list args)) {
 	// LOGI("CallObjectMethodV: %p", methodID);
 	if (methodID==Cymoe::methodGetFakeApplicationInfo||methodID==Cymoe::methodGetFakePackageInfo) {
+		// 为什么要这样做呢？首先我们要明确我们没法动态构造一个 va_list（如果可以请告诉我），因此我们只能用到 CallObjectMethod
+		// 但实际上 CallObjectMethod 是间接地调用了 CallObjectMethodV，如果直接调用 CallObjectMethod 会死循环。
+		// 因此我们 CallObjectMethod 时把 obj 传为 nullptr，这样再做个判断就可以了。
 		if (obj==nullptr) return CallObjectMethodV_old(env, Cymoe::INSTANCE, methodID, args);
 		return env->CallObjectMethod(nullptr, methodID);
 	}
@@ -105,6 +109,7 @@ static std::atomic_flag hooked = ATOMIC_FLAG_INIT;
 
 DEFINE_HOOK(jint, GetEnv, (JavaVM* vm, JNIEnv** env, int version)) {
 	jint ret = GetEnv_old(vm, env, version);
+	// 这些方法都只 hook 一次，否则会死循环
 	if (!hooked.test_and_set()) {
 		JNINativeInterface* functions = const_cast<JNINativeInterface*>((*env)->functions);
 		void* GetMethodID = (void*) functions->GetMethodID;

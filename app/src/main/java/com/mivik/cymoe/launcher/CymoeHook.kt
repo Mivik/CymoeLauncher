@@ -16,10 +16,16 @@ import android.view.Display
 import com.mivik.cymoe.CYTUS_PACKAGE_NAME
 import com.mivik.cymoe.Cymoe
 import com.mivik.cymoe.T
-import com.mivik.cymoe.isCymoeClass
 import lab.galaxy.yahfa.HookMain
 import java.lang.reflect.*
 
+/**
+ * 简单的工具类，逐个 hook [targetMethods] 中的 Method/Constructor。
+ * hook 函数名字应为 (原函数名)_new
+ * backup 函数名字应为 (原函数名)_old
+ *
+ * @see HookMain
+ */
 abstract class CymoeHook {
 	// 这里不用到 <out Member>，因为在高版本 Android API 上开发会把由方法和构造函数构建出的数组自动推断为 Executable 类
 	// 而在 Android 低版本上是没有这个类的，因此在构造数组时会报错
@@ -60,6 +66,9 @@ abstract class CymoeHook {
 	}
 }
 
+/**
+ * hook [ComponentName] 的构造方法，使所有原本包名为 Cytus 报名的 [ComponentName] 指向 Cymoe
+ */
 @SuppressLint("SoonBlockedPrivateApi")
 object ComponentNameHook : CymoeHook() {
 	override val targetMethods = run {
@@ -100,6 +109,11 @@ object ComponentNameHook : CymoeHook() {
 		else ComponentName_old(context, cls)
 }
 
+/**
+ * hook [Context] 的 [Resources] 对象，使之在被创建后不久（完全替换有些麻烦）就指向我们自己的 [CymoeResourcesWrapper]。
+ *
+ * @see CymoeResourcesWrapper
+ */
 object ResourcesHook : CymoeHook() {
 	private lateinit var fieldMResources: Field
 

@@ -5,6 +5,8 @@ import android.content.SharedPreferences
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
+// 一个简单的工具类，用于实现基于 kotlin property 的 SharedPreferences。
+// 来源于 https://blog.csdn.net/Jokey_wz/article/details/82350759，做了一些小的修改。
 open class KtPreferences(val preferences: SharedPreferences) {
 	constructor(context: Context, name: String) : this(context.getSharedPreferences(name, Context.MODE_PRIVATE))
 

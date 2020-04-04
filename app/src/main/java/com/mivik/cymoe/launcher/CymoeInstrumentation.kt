@@ -10,7 +10,6 @@ import android.os.PersistableBundle
 import com.mivik.cymoe.isCymoeClass
 
 object CymoeInstrumentation : Instrumentation() {
-
 	override fun callActivityOnCreate(activity: Activity?, icicle: Bundle?) {
 		if (activity != null) injectActivityIfNeeded(activity)
 		super.callActivityOnCreate(activity, icicle)
@@ -21,12 +20,16 @@ object CymoeInstrumentation : Instrumentation() {
 		super.callActivityOnCreate(activity, icicle, persistentState)
 	}
 
+	/**
+	 * 在 [Activity] 启动时注入我们自己的 [ContextWrapper]
+	 *
+	 * @see CymoeContextWrapper
+	 */
 	@SuppressLint("PrivateApi")
 	private fun injectActivityIfNeeded(activity: Activity) {
 		if (activity.javaClass.isCymoeClass()) return
 		val fieldMBase = ContextWrapper::class.java.getDeclaredField("mBase").apply { isAccessible = true }
 		val mBase = fieldMBase.get(activity) as Context?
-
 		fieldMBase.set(activity, CymoeContextWrapper(mBase))
 	}
 }

@@ -2,6 +2,9 @@ package com.mivik.cymoe
 
 import android.content.Context
 
+/**
+ * 自用的 SharedPreferences。注意这里的字段在 Assembly 那边会用到，所以不要随便改名。
+ */
 class CymoePreferences private constructor(context: Context) : KtPreferences(context, "cymoe") {
 
 	companion object {

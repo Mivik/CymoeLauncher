@@ -1,17 +1,11 @@
 package com.mivik.cymoe.launcher
 
-import android.content.ComponentName
 import android.content.Context
 import android.content.ContextWrapper
-import android.content.Intent
-import android.content.res.Resources
-import android.os.Bundle
-import android.util.Log
 import com.mivik.cymoe.CYTUS_PACKAGE_NAME
 import com.mivik.cymoe.Cymoe
-import com.mivik.cymoe.T
-import com.mivik.cymoe.adjust
 
+// 私怀疑这里的东西有些 redundant...
 class CymoeContextWrapper(base: Context?) : ContextWrapper(base) {
 	override fun getPackageName(): String {
 		return CYTUS_PACKAGE_NAME

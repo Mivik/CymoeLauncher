@@ -11,6 +11,11 @@ import androidx.annotation.RequiresApi
 import com.mivik.cymoe.CYTUS_PACKAGE_NAME
 import java.io.InputStream
 
+/**
+ * 一个 ResourcesWrapper。从给定的 [assets] 构建的 Resources 中寻找资源，如果没有找到再去在 [fallback] 中寻找。
+ * 这样做是为了和系统兼容。举个例子，部分手机在弹出 Toast 时会在 Toast 的内容前面加上应用的名字。获取应用名字是通过 `Resources.getString` 实现的。
+ * 很显然，Cytus II 的资源中是找不到我们的 app_name 的，这时候我们把自己原来的 Resources 作为 [fallback]，就能解决这一问题。
+ */
 class CymoeResourcesWrapper(
 	val fallback: Resources,
 	assets: AssetManager
