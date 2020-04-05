@@ -25,7 +25,7 @@
 
 注意 csharp 文件夹中的 Cymoe.cs 是游戏中并不存在的类，需要手工添加。
 
-构建好 Assembly-CSharp.dll 后，你就可以像构建正常 Android 应用一样构建 **CymoeLauncher**　了。
+构建好 Assembly-CSharp.dll 后，你就可以像构建正常 Android 应用一样构建 **CymoeLauncher** 了。
 
 ## 🖼️ 预览
 
@@ -54,4 +54,4 @@
 
 Copyright © 2020 [Mivik](https://github.com/Mivik).
 
-This project is [GPL--3.0](./LICENSE.md) licensed.
+This project is [GPL-3.0](./LICENSE.md) licensed.
