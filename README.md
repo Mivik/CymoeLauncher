@@ -7,6 +7,8 @@
   </a>
 </p>
 
+## 由于新版本 Cytus II 将 script-backend 更改为了 il2cpp，本项目不再有效。
+
 > 龙渊代理的 Cytus II 启动器
 
 ## ▶️ 使用

@@ -33,7 +33,6 @@ static ret name##_fake args
 #include <string.h>
 #include <stdio.h>
 
-#include <unwind.h>
 #include <dlfcn.h>
 
 inline bool endsWith(const char *str, const char *tar) {
@@ -43,23 +42,23 @@ inline bool endsWith(const char *str, const char *tar) {
 	return !strcmp(str+strLen-tarLen, tar);
 }
 
+#include <unwind.h>
+
 namespace {
+	struct BacktraceState {
+		void** current;
+		void** end;
+	};
 
-struct BacktraceState {
-	void** current;
-	void** end;
-};
-
-static _Unwind_Reason_Code unwindCallback(struct _Unwind_Context* context, void* arg) {
-	BacktraceState* state = static_cast<BacktraceState*>(arg);
-	uintptr_t pc = _Unwind_GetIP(context);
-	if (pc) {
-		if (state->current == state->end) return _URC_END_OF_STACK;
-		else *state->current++ = reinterpret_cast<void*>(pc);
+	static _Unwind_Reason_Code unwindCallback(struct _Unwind_Context* context, void* arg) {
+		BacktraceState* state = static_cast<BacktraceState*>(arg);
+		uintptr_t pc = _Unwind_GetIP(context);
+		if (pc) {
+			if (state->current == state->end) return _URC_END_OF_STACK;
+			else *state->current++ = reinterpret_cast<void*>(pc);
+		}
+		return _URC_NO_REASON;
 	}
-	return _URC_NO_REASON;
-}
-
 };
 
 const char* dumpBacktrace(size_t maxCount) {

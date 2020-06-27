@@ -49,10 +49,10 @@ class FloatingButton(var context: Context) : PopupWindow(), View.OnTouchListener
 		isClippingEnabled = false
 	}
 
-	val screenWidth: Int
+	private val screenWidth: Int
 		get() = context.resources.displayMetrics.heightPixels
 
-	val screenHeight: Int
+	private val  screenHeight: Int
 		get() = context.resources.displayMetrics.widthPixels
 
 	private fun onClick() {
